@@ -402,13 +402,16 @@ M.mix_credo = h.make_builtin({
     filetypes = { "elixir", "eelixir" },
     generator_opts = {
         command = "mix",
-        format = "line",
         args = { "credo", "suggest", "--format=flycheck", "--read-from-stdin", "$FILENAME" },
+        format = "line",
         to_stdin = true,
-        on_output = h.diagnostics.from_pattern(
-            [[(%d+):(%d+):(%d+):(%w+):(.+)]],
-            { "row", "col", "code", "severity", "message" }
-        ),
+        on_output = function(...)
+            print(vim.inspect(...))
+        end,
+        -- h.diagnostics.from_pattern(
+        --       [[(%d+):(%d+):(%d+):(%w+):(.+)]],
+        --       { "row", "col", "code", "severity", "message" }
+        --   ),
     },
     factory = h.generator_factory,
 })
