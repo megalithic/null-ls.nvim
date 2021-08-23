@@ -395,4 +395,22 @@ M.vint = h.make_builtin({
     factory = h.generator_factory,
 })
 
+-- lintIgnoreExitCode = true,
+-- lintFormats = { "%f:%l:%c: %m" },
+M.mix_credo = h.make_builtin({
+    method = DIAGNOSTICS,
+    filetypes = { "elixir", "eelixir" },
+    generator_opts = {
+        command = "mix",
+        format = "line",
+        args = { "credo", "suggest", "--format=flycheck", "--read-from-stdin", "$FILENAME" },
+        to_stdin = true,
+        on_output = h.diagnostics.from_pattern(
+            [[(%d+):(%d+):(%d+):(%w+):(.+)]],
+            { "row", "col", "code", "severity", "message" }
+        ),
+    },
+    factory = h.generator_factory,
+})
+
 return M
